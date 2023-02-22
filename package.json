@@ -1,0 +1,28 @@
+{
+  "name": "challenge_12",
+  "version": "1.0.0",
+  "description": "Employee tracker",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PanosGian/challenge_12.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PanosGian/challenge_12/issues"
+  },
+  "homepage": "https://github.com/PanosGian/challenge_12#readme",
+  "dependencies": {
+    "asciiart-logo": "^0.2.7",
+    "chalk": "^4.1.2",
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.4",
+    "mysql": "^2.18.1"
+  }
+}
