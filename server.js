@@ -38,7 +38,7 @@ function menuQuestions() {
             type: "list",
             name: "menu",
             loop: false,
-            message: "What would you like to do?",
+            message: "SELECT A MENU OPTION?",
             choices: [
                 "View Departments",
                 "View Roles",
@@ -81,44 +81,8 @@ function menuQuestions() {
 }
 
 
-function viewDepartments() {
-    let query = "SELECT * FROM department;";
-    db.query(query, function (err, res) {
-        console.table("\n", res);
-        menuQuestions();
-    });
-}
-
-
-function viewRoles() {
-    let query = "SELECT * FROM role;";
-    db.query(query, function (err, res) {
-        console.table("\n", res);
-        menuQuestions();
-    });
-}
-
-
-function viewEmployees() {
-    let query = `SELECT E.id, E.first_name, E.last_name, R.title,  D.department_name, R.salary, EE.last_name AS Manager
-    FROM employee E
-    INNER JOIN role R ON R.id = E.role_id
-    INNER JOIN department D ON D.id = R.department_id
-    INNER JOIN employee EE ON EE.id = E.manager_id;`;
-
-    // let query = "SELECT * FROM employee;";
-    db.query(query, function (err, res) {
-        console.table("\n", res);
-        menuQuestions();
-    });
-}
-
-
-//================= Select Role Quieries Role Title for Add Employee Prompt ===========//
-
-
-
-
+//================= SUPPORT FUNCTIONS:
+//GET roles array from the roles table
 async function selectRole() {
     return new Promise((resolve, reject) => {
         var roleArr = [];
@@ -127,12 +91,11 @@ async function selectRole() {
             for (var i = 0; i < res.length; i++) {
                 roleArr.push(res[i].title);
             }
-            //console.log("Roles : " + roleArr + "\n\n");
             resolve(roleArr);
         });
     });
 }
-
+//GET rmanagers array from the managers table
 async function selectManager() {
     return new Promise((resolve, reject) => {
         var managerArr = [];
@@ -141,12 +104,12 @@ async function selectManager() {
             for (var i = 0; i < res.length; i++) {
                 managerArr.push(res[i].last_name);
             }
-            //console.log("managers : " + managerArr + "\n\n");
             resolve(managerArr);
         });
     });
 }
 
+//GET departments array from the departments table
 async function selectDepartment() {
     return new Promise((resolve, reject) => {
         var departmentArr = [];
@@ -155,23 +118,18 @@ async function selectDepartment() {
             for (var i = 0; i < res.length; i++) {
                 departmentArr.push(res[i].department_name);
             }
-            //console.log("departments : " + departmentArr + "\n\n");
             resolve(departmentArr);
         });
     });
 }
 
-
+//GET an amployee names array from the employee table
 async function selectEmployee() {
     return new Promise((resolve, reject) => {
         var employeeArr = [];
         db.query("SELECT first_name, last_name FROM employee", function (err, res) {
             if (err) reject(err);
             for (var i = 0; i < res.length; i++) {
-                //   employeeArr.push({
-                //     first_name: res[i].first_name,
-                //     last_name: res[i].last_name
-                //   });
                 employeeArr.push(`${res[i].first_name} ${res[i].last_name}`);
             }
             resolve(employeeArr);
@@ -179,7 +137,38 @@ async function selectEmployee() {
     });
 }
 
+//MAIN MENU FUNCTIONS =========================================================
 
+//View departments table:
+function viewDepartments() {
+    let query = "SELECT * FROM department;";
+    db.query(query, function (err, res) {
+        console.table("\n", res);
+        menuQuestions();
+    });
+}
+
+//View Roles table:
+function viewRoles() {
+    let query = "SELECT * FROM role;";
+    db.query(query, function (err, res) {
+        console.table("\n", res);
+        menuQuestions();
+    });
+}
+
+//View employees table:
+function viewEmployees() {
+    let query = `SELECT E.id, E.first_name, E.last_name, R.title,  D.department_name, R.salary, EE.last_name AS Manager
+    FROM employee E
+    INNER JOIN role R ON R.id = E.role_id
+    INNER JOIN department D ON D.id = R.department_id
+    INNER JOIN employee EE ON EE.id = E.manager_id;`;
+    db.query(query, function (err, res) {
+        console.table("\n", res);
+        menuQuestions();
+    });
+}
 
 async function addEmployee() {
     try {
