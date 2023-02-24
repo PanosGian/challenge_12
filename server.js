@@ -7,6 +7,9 @@ const db = require('./connection.js');
 var cTable = require("console.table");
 
 
+console.clear();
+
+//Display logo screen:
 console.log(
     logo({
         name: 'EMPLOYEE MANAGER',
@@ -21,19 +24,25 @@ console.log(
         .render()
 );
 
+const keypress = async () => {
+    process.stdin.setRawMode(true)
+    return new Promise(resolve => process.stdin.once('data', () => {
+      process.stdin.setRawMode(false)
+      resolve()
+    }))
+  }
 
-db.connect(function (err) {
+ db.connect(async function (err) {
     if (err) throw err;
-    console.clear();
-    console.log(chalk.yellow("Welcome to the Employee Tracker!\n "));
+    console.log(chalk.yellow("Welcome to the Employee Tracker! Press any key to continue:\n "));
+     await keypress();
     menuQuestions();
 });
 
 
 // Beginning questions prompting user what action to take
-function menuQuestions() {
-
-    inquirer.prompt([
+async function menuQuestions() {
+       inquirer.prompt([
         {
             type: "list",
             name: "menu",
@@ -142,7 +151,8 @@ async function selectEmployee() {
 //View departments table:
 function viewDepartments() {
     let query = "SELECT * FROM department;";
-    db.query(query, function (err, res) {
+    db.query(query, async function (err, res) {
+        console.log(chalk.yellow("\nDEPARTMENTS TABLE:"));
         console.table("\n", res);
         menuQuestions();
     });
@@ -152,6 +162,7 @@ function viewDepartments() {
 function viewRoles() {
     let query = "SELECT * FROM role;";
     db.query(query, function (err, res) {
+        console.log(chalk.yellow("\nROLES TABLE:"))
         console.table("\n", res);
         menuQuestions();
     });
@@ -165,6 +176,7 @@ function viewEmployees() {
     INNER JOIN department D ON D.id = R.department_id
     INNER JOIN employee EE ON EE.id = E.manager_id;`;
     db.query(query, function (err, res) {
+        console.log(chalk.yellow("\nEMPLOYEES TABLE:"))
         console.table("\n", res);
         menuQuestions();
     });
